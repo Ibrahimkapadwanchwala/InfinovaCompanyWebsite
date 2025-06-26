@@ -1,4 +1,5 @@
 const internshipModel = require("../../../models/intershipModel");
+const mongoose=require('mongoose');
 const createIntership = async (req, res) => {
   try {
     const internship = await internshipModel.create(req.body);
@@ -21,12 +22,17 @@ const getInternship = async (req, res) => {
 };
 const updateInternship = async (req, res) => {
   try {
-    const updated = await internshipModel.findByIdAndUpdate(
-      req.params.id,
+    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      return res.status(400).json({message:"Invalid ID format"});
+    }
+    const updated = await internshipModel.findOneAndUpdate(
+      {_id:req.params.id},
       req.body,
       { new: true }
     );
-
+    if(!updated){
+      return res.status(404).json({message:"Internship not found!"});
+    }
     res.json(updated);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -34,7 +40,10 @@ const updateInternship = async (req, res) => {
 };
 const deleteInternship = async (req, res) => {
   try {
-    const deletedInternship = await internshipModel.findOneAndDelete(
+    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      return res.status(400).json({message:"Invalid ID format"});
+    }
+    const deletedInternship = await internshipModel.findByIdAndDelete(
       req.params.id
     );
     if (!deletedInternship) {

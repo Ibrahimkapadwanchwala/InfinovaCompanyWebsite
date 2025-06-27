@@ -10,7 +10,6 @@ const courseSchema=new mongoose.Schema({
     },
     duration:{
         type:String,
-        required:true
     },
     brochure:{
         type:String
@@ -18,7 +17,7 @@ const courseSchema=new mongoose.Schema({
     category:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'courseCategory',
-        required:true
+       
     },
     trainer:{
         type:mongoose.Schema.Types.ObjectId,
@@ -30,4 +29,4 @@ const courseSchema=new mongoose.Schema({
         default:false
     }
 },{timestamps:true});
-module.exports=courseSchema;
+module.exports=mongoose.model("Course",courseSchema);

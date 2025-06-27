@@ -9,11 +9,12 @@ const trainerSchema=new mongoose.Schema({
         required:true,
     },
     socialLinks:{
-        type:String,
-        required:true
+        linkedIn:String,
+        github:String,
+        twitter:String
     },
-    image:{
+    trainerImage:{
         type:String
     }
-});
-module.exports=mongoose.model("trainer",trainerSchema);
+},{timestamps:true});
+module.exports=mongoose.model("Trainer",trainerSchema);

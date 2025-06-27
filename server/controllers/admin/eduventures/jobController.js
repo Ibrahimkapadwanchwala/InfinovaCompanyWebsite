@@ -11,6 +11,7 @@ try {
 const getJob=async(req,res)=>{
     try {
         const data=await jobModel.find();
+        
         if(data.length===0){
             return res.json({message:"No jobs found!!"});
         }
@@ -49,4 +50,4 @@ createJob,
 getJob,
 updateJob,
 deleteJob
-};
+};                                                                                                                                

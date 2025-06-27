@@ -6,4 +6,4 @@ const courseCategorySchema=new mongoose.Schema({
         unique:true
     }
 });
-module.exports=mongoose.model("courseCategory",courseCategorySchema);
+module.exports=mongoose.model("CourseCategory",courseCategorySchema);

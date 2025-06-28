@@ -16,9 +16,8 @@ const createTrainer=async(req,res)=>{
     try {
     const image = req.files.trainerImage;
     const result = await cloudinary.uploader.upload(image.tempFilePath);
-    console.log("Uploaded Image:", result.url);
+    
     const {name,description, linkedIn, github, twitter}=req.body;
-    console.log(name," " , description,linkedIn,github,twitter);
     const createdTrainer=await trainerModel.create(
        { name,
         description,

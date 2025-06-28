@@ -8,7 +8,7 @@ const{
 }=require("../../../controllers/admin/eduventures/internshipController");
 const { create } = require('../../../models/intershipModel');
 router.get('/',getInternship);
-router.post('/',createIntership);
-router.put('/:id',updateInternship);
-router.delete('/:id',deleteInternship);
+router.post('/new',createIntership);
+router.put('/update/:id',updateInternship);
+router.delete('/delete/:id',deleteInternship);
 module.exports=router;

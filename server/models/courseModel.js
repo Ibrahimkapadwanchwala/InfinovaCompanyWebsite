@@ -16,12 +16,12 @@ const courseSchema=new mongoose.Schema({
     },
     category:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'courseCategory',
+        ref:'CourseCategory',
        
     },
     trainer:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"trainer",
+        ref:"Trainer",
         required:true   
     },
     isPublished:{

@@ -18,3 +18,8 @@ const trainerSchema=new mongoose.Schema({
     }
 },{timestamps:true});
 module.exports=mongoose.model("Trainer",trainerSchema);
+
+
+
+
+

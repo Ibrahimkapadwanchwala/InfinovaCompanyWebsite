@@ -15,10 +15,13 @@ const trainerSchema=new mongoose.Schema({
     },
     trainerImage:{
         type:String
+    },
+    trainerImagePublicId:{
+        type:String
     }
 },{timestamps:true});
 module.exports=mongoose.model("Trainer",trainerSchema);
-
+  
 
 
 

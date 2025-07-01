@@ -16,14 +16,22 @@ const getCourses = async (req, res) => {
 const addCourse = async (req, res) => {
   try {
     const brochureFile = req.files.brochure;
+     const allowedExtensions = ['.pdf', '.docx'];
+    const ext = path.extname(brochureFile.name).toLowerCase();
+    
+    if (!allowedExtensions.includes(ext)) {
+      return res.status(400).json({ message: "Unsupported brochure format." });
+    }
     const result = await cloudinary.uploader.upload(brochureFile.tempFilePath);
     const { name, details, duration, category, trainer } = req.body;
     const brochureUrl = result.url;
+    const brochurePublicId=result.public_id;
     const newCourse = await courseModel.create({
       name,
       details,
       duration,
       brochureUrl,
+      brochurePublicId,
       category,
       trainer,
       isPublished: true,
@@ -46,12 +54,20 @@ const deleteCourse = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ message: "Invalid ID format!" });
     }
+    const courseId=req.params.id;
+    const course=await courseModel.findById(courseId);
+    if(!course){
+      return res.status(404).json({message:"Course not found!"});
+    }
+
+    
+    if(course.brochurePublicId){
+      await cloudinary.uploader.destroy(course.brochurePublicId);
+    }
     const deletedCourse = await courseModel.findOneAndDelete({
       _id: req.params.id,
     });
-    if (!deletedCourse) {
-      return res.status(404).json({ message: "No course found" });
-    }
+    
     return res.json({ message: "deleted course sucessfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -59,23 +75,55 @@ const deleteCourse = async (req, res) => {
 };
 const updateCourse = async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const courseId=req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
       return res.status(400).json({ message: "Invalid ID format!" });
     }
-    const brochureFile = req.files.brochure;
+    const course=await courseModel.findById(courseId);
+    if(!course){
+      return res.status(404).json({message:"Course not found!"});
+    }
+    const{name,details,duration,category,trainer}=req.body;
+    const updatedFields={
+      name:name||course.name,
+      details:details||course.details,
+      duration:duration||course.duration,
+      category:category||course.category,
+      trainer:trainer||course.trainer
+   
+    }
+    if(req.files?.brochure){
+      const brochureFile = req.files.brochure;
+      const allowedExtensions = ['.pdf', '.docx'];
+    const ext = path.extname(brochureFile.name).toLowerCase();
+    
+    if (!allowedExtensions.includes(ext)) {
+      return res.status(400).json({ message: "Unsupported brochure format." });
+    }
+    if(course.brochurePublicId){
+      await cloudinary.uploader.destroy(course.brochurePublicId);
+    }
     const result = await cloudinary.uploader.upload(brochureFile.tempFilePath);
+    updatedFields.brochureUrl=result.secure_url;
+    updatedFields.brochurePublicId=result.public_id;
+     fs.unlink(brochureFile.tempFilePath, (err) => {
+        if (err) console.error("Failed to delete temp file:", err);
+      });
+    }
+    
+    
 
-    const brochureUrl = result.url;
+    
     const updatedCourse = await courseModel.findOneAndUpdate(
       { _id: req.params.id },
-      req.body,
+      updatedFields,
       { new: true }
     );
     const populatedCourse = await courseModel
       .findById(updatedCourse._id)
       .populate("trainer")
       .populate("category");
-    return res.json(populatedCourse);
+    return res.status(200).json({message:"Updated course sucessfully!",data:populatedCourse});
   } catch (error) {
     return res.status(500).json({ meessage: error.message });
   }

@@ -89,8 +89,8 @@ const updateCourse = async (req, res) => {
       details:details||course.details,
       duration:duration||course.duration,
       category:category||course.category,
-      trainer:trainer||course.trainer
-   
+      trainer:trainer||course.trainer,
+      isPublished:isPublished||course.isPublished
     }
     if(req.files?.brochure){
       const brochureFile = req.files.brochure;

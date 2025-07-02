@@ -8,6 +8,8 @@ const courseCategoryRouter=require('./routes/admin/eduventures/courseCategoryRou
 const trainerRouter=require('./routes/admin/eduventures/trainerRoute');
 const courseRouter=require('./routes/admin/eduventures/courseRoutes');
 const testimonialRouter=require('./routes/admin/eduventures/testimonialRoutes');
+const trainingCategoryRouter=require('./routes/admin/consultants/trainingCategoryRoutes');
+const trainingRouter=require('./routes/admin/consultants/trainingRoutes');
 app.use(fileUpload({
     useTempFiles:true
 }));
@@ -17,6 +19,9 @@ app.use('/api/admin/course-category',courseCategoryRouter);
 app.use('/api/admin/trainers',trainerRouter);
 app.use('/api/admin/courses',courseRouter);
 app.use('/api/admin/testimonials',testimonialRouter);
+app.use('/api/admin/training-category',trainingCategoryRouter);
+app.use('/api/admin/trainings',trainingRouter);
+
 app.get('/',(req,res)=>{
     res.send("API started!!");
 });

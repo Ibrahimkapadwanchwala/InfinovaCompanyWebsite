@@ -85,9 +85,9 @@ const updateTraining=async(req,res)=>{
         const updatedPopulatedTraining=await trainingModel.findById(updateTraining._id).populate('trainer').populate('category');
          return res.status(200).json({
       message: "Training updated successfully",
-      data: updatedTraining
+      data: updatedPopulatedTraining
     });
-
+ 
     } catch (error) {
         return res.status(500).json({message:error.message});
     }

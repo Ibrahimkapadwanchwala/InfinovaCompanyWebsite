@@ -12,6 +12,7 @@ const trainingCategoryRouter=require('./routes/admin/consultants/trainingCategor
 const trainingRouter=require('./routes/admin/consultants/trainingRoutes');
 const hiringSolutionsCategoryRouter=require('./routes/admin/consultants/hiringSolutionsCategoryRoutes')
 const hiringSolutionsRouter=require('./routes/admin/consultants/hiringSolutionsRoutes');
+const serviceCategoryRouter=require('./routes/admin/technologies/serviceCategoryRoutes')
 app.use(fileUpload({
     useTempFiles:true
 }));
@@ -25,6 +26,7 @@ app.use('/api/admin/training-category',trainingCategoryRouter);
 app.use('/api/admin/trainings',trainingRouter);
 app.use('/api/admin/hiringSolutions-category',hiringSolutionsCategoryRouter);
 app.use('/api/admin/hiringSolutions',hiringSolutionsRouter);
+app.use('/api/admin/service-category',serviceCategoryRouter);
 app.get('/',(req,res)=>{
     res.send("API started!!");
 });

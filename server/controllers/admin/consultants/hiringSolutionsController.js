@@ -27,7 +27,7 @@ const addSolutions=async(req,res)=>{
             if(!allowedExtensions.includes(ext)){
                 return res.status(400).json({message:"Unsupported brochure format"});
             }
-            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath);
+            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath,{resource_type:"raw"});
             brochureUrl=result.secure_url;
             brochurePublicId=result.public_id;
             fs.unlink(brochureFile.tempFilePath,()=>{});
@@ -50,7 +50,7 @@ const deleteSolution=async(req,res)=>{
             return res.status(404).json({message:"Service not found!"});
         }
         if(solution.brochurePublicId){
-            await cloudinary.uploader.destroy(solution.brochurePublicId);
+            await cloudinary.uploader.destroy(solution.brochurePublicId,{resource_type:"raw"});
         }
         await hiringSolutionsModel.findByIdAndDelete(id);
     return res.json({ message: "Service deleted successfully" });
@@ -82,10 +82,10 @@ const updateSolution=async(req,res)=>{
       }
 
       if (solution.brochurePublicId) {
-        await cloudinary.uploader.destroy(hiring.brochurePublicId);
+        await cloudinary.uploader.destroy(solution.brochurePublicId,{resource_type:"raw"});
       }
 
-      const result = await cloudinary.uploader.upload(brochure.tempFilePath);
+      const result = await cloudinary.uploader.upload(brochure.tempFilePath,{resource_type:"raw"});
       updatedFields.brochureUrl = result.secure_url;
       updatedFields.brochurePublicId = result.public_id;
 

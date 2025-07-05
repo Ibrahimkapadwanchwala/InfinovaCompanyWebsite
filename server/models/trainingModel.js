@@ -6,7 +6,7 @@ const trainingSchema=mongoose.Schema({
     },
     details:{
         type:String,
-        required:true1
+        required:true
     },
     duration:{
         type:String,

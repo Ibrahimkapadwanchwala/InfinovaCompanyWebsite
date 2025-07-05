@@ -26,7 +26,7 @@ app.use('/api/admin/training-category',trainingCategoryRouter);
 app.use('/api/admin/trainings',trainingRouter);
 app.use('/api/admin/hiringSolutions-category',hiringSolutionsCategoryRouter);
 app.use('/api/admin/hiringSolutions',hiringSolutionsRouter);
-app.use('/api/admin/service-category',serviceCategoryRouter);
+app.use('/api/admin/service-category',serviceCategoryRouter); 
 app.get('/',(req,res)=>{
     res.send("API started!!");
 });

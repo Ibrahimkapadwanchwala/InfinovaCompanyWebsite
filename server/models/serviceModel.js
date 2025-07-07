@@ -18,6 +18,11 @@ const serviceModel=mongoose.Schema({
     brochurePublicId:{
         type:String
 
+    },
+    catgory:{
+        type:mongoose.Types.ObjectId,
+        ref:'ProductCategory',
+        required:true
     }
 },{timestamps:true});
 module.exports=mongoose.model("Service",serviceModel);

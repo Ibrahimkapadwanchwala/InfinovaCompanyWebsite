@@ -8,7 +8,7 @@ const jobSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    ctc:{
+    salary:{
         type:String,
         required:true
     },
@@ -19,6 +19,10 @@ const jobSchema=new mongoose.Schema({
     isPublished:{
         type:Boolean,
         default:false
+    },
+    location:{
+        type:String,
+        required:true
     }
 },{timestamps:true});
 module.exports=mongoose.model("Job",jobSchema)

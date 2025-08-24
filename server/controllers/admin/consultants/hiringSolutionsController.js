@@ -27,7 +27,9 @@ const addSolutions=async(req,res)=>{
             if(!allowedExtensions.includes(ext)){
                 return res.status(400).json({message:"Unsupported brochure format"});
             }
-            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath,{resource_type:"raw"});
+            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath,{
+                folder:"HiringSolutions-brochure",
+                resource_type:"raw"});
             brochureUrl=result.secure_url;
             brochurePublicId=result.public_id;
             fs.unlink(brochureFile.tempFilePath,()=>{});
@@ -85,7 +87,7 @@ const updateSolution=async(req,res)=>{
         await cloudinary.uploader.destroy(solution.brochurePublicId,{resource_type:"raw"});
       }
 
-      const result = await cloudinary.uploader.upload(brochure.tempFilePath,{resource_type:"raw"});
+      const result = await cloudinary.uploader.upload(brochure.tempFilePath,{folder:"HiringSolutions-brochure",resource_type:"raw"});
       updatedFields.brochureUrl = result.secure_url;
       updatedFields.brochurePublicId = result.public_id;
 

@@ -14,6 +14,16 @@ const hiringSolutionsCategoryRouter=require('./routes/admin/consultants/hiringSo
 const hiringSolutionsRouter=require('./routes/admin/consultants/hiringSolutionsRoutes');
 const serviceCategoryRouter=require('./routes/admin/technologies/serviceCategoryRoutes')
 const productCategoryRouter=require('./routes/admin/technologies/productCategoryRoutes');
+const clientCourseRouter=require('./routes/client/eduventures/courseRouter');
+const clientTrainerRouter=require('./routes/client/eduventures/trainerRoutes');
+const clientInternshipRouter=require('./routes/client/eduventures/internshipRoutes');
+const clientJobRouter=require('./routes/client/eduventures/jobRoutes')
+const cors=require('cors')
+app.use(cors({
+    origin: ["http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}))
 app.use(fileUpload({
     useTempFiles:true
 }));
@@ -29,6 +39,10 @@ app.use('/api/admin/hiringSolutions-category',hiringSolutionsCategoryRouter);
 app.use('/api/admin/hiringSolutions',hiringSolutionsRouter);
 app.use('/api/admin/service-category',serviceCategoryRouter); 
 app.use('/api/admin/product-category',productCategoryRouter);
+app.use('/api/user/courses',clientCourseRouter);
+app.use('/api/user/trainers',clientTrainerRouter);
+app.use('/api/user/internships',clientInternshipRouter);
+app.use('/api/user/jobs',clientJobRouter);
 app.get('/',(req,res)=>{
     res.send("API started!!");
 });

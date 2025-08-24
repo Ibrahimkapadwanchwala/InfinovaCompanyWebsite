@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const productCategoryModel = require("../../../models/productCategoryModel");
 const getCategories = async (req, res) => {
   try {

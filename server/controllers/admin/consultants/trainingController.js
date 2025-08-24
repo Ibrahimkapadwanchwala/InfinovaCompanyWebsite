@@ -26,7 +26,10 @@ const addTraining=async(req,res)=>{
             if(!allowedExtensions.includes(ext)){
                 return res.status(400).json({message:"Unsupported brochure format! "})
             }
-            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath);
+            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath,{
+                folder:"Training-brochures",
+                resource_type:"raw"
+            });
             brochureUrl=result.secure_url;
             brochurePublicId=result.public_id;
              fs.unlink(brochureFile.tempFilePath, () => {});
@@ -76,7 +79,10 @@ const updateTraining=async(req,res)=>{
             if(training.brochurePublicId){
                 await cloudinary.uploader.destroy(training.brochurePublicId);
             }
-            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath);
+            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath,{
+                folder:"Training-brochures",
+                resource_type:"raw"
+            });
             updatedFields.brochureUrl=result.secure_url;
             updatedFields.brochurePublicId=result.public_id;
             fs.unlink(brochureFile.tempFilePath,()=>{});
@@ -103,7 +109,9 @@ const deleteTraining=async(req,res)=>{
             return res.status(404).json({message:"Training not found! "});
         }
         if(training.brochurePublicId){
-            await cloudinary.uploader.destroy(training.brochurePublicId);
+            await cloudinary.uploader.destroy(training.brochurePublicId,{
+                resource_type:"raw"
+            });
         }
         await trainingModel.findByIdAndDelete(trainingId);
         return res.json({message:"Training deleted sucessfully!"});

@@ -14,18 +14,24 @@ const getServices=async(req,res)=>{
         return res.status(500).json({message:error.message});
     }
 };
-const addService=async(res,res)=>{
+const addService=async(req,res)=>{
     try {
         const{name,details,cost}=req.body;
+        if (!name || !details || !cost) {
+  return res.status(400).json({ message: "All fields (name, details, cost) are required." });
+}
         const brochureFile=req.files.brochure;
         const allowedExtensions = ['.pdf', '.docx'];
     const ext = path.extname(brochureFile.name).toLowerCase();
     if (!allowedExtensions.includes(ext)) {
           return res.status(400).json({ message: "Unsupported brochure format." });
         }
-        const result = await cloudinary.uploader.upload(brochureFile.tempFilePath,{resource_type:"raw"});
+        const result = await cloudinary.uploader.upload(brochureFile.tempFilePath,{
+            folder:"Service-brochures",
+            resource_type:"raw"});
         const brochureUrl=result.secure_url;
         const brochurePublicId=result.public_id;
+         fs.unlink(brochureFile.tempFilePath,()=>{});
         const newService=await serviceModel.create({
             name,
             details,
@@ -54,7 +60,7 @@ const deleteService=async(req,res)=>{
 
         }
         await serviceModel.findByIdAndDelete(id);
-        return res.status(201).json({message:"Servive deleted sucessfully!!"});
+        return res.status(200).json({message:"Servive deleted sucessfully!!"});
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
@@ -75,7 +81,7 @@ const updateService=async(req,res)=>{
         if(req.files?.brochure){
             const brochureFile=req.files.brochure;
             const ALLOWED_EXTENSIONS=[".pdf",".docx"];
-            const ext=path.extname(brochureFile).toLowerCase();
+            const ext=path.extname(brochureFile.name).toLowerCase();
             if(!ALLOWED_EXTENSIONS.includes(ext)){
                 return res.status(400).json({message:"Unsupported brochure format!"});
 
@@ -84,10 +90,10 @@ const updateService=async(req,res)=>{
                 await cloudinary.uploader.destroy(brochurePublicId,{resource_type:"raw"});
 
             }
-            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath,{resource_type:"raw"});
+            const result=await cloudinary.uploader.upload(brochureFile.tempFilePath,{folder:"Service-brochures",resource_type:"raw"});
             brochureUrl=result.secure_url;
             brochurePublicId=result.public_id;
-            fs.unlink(tempFilePath,()=>{});
+            fs.unlink(brochureFile.tempFilePath,()=>{});
 
         }
         const updatedService=await serviceModel.findByIdAndUpdate(id,{
@@ -97,7 +103,7 @@ const updateService=async(req,res)=>{
             brochureUrl,
             brochurePublicId
         },{new:true});
-        return res.status(201).json({message:"service updated sucessfully!!",data:updateService});
+        return res.status(201).json({message:"service updated sucessfully!!",data:updatedService});
     } catch (error) {
         
         return res.status(500).json({message:error.message});

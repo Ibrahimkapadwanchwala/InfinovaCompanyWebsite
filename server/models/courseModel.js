@@ -11,7 +11,7 @@ const courseSchema=new mongoose.Schema({
     duration:{
         type:String,
     },
-    brochure:{
+    brochureUrl:{
         type:String
     },
     brochurePublicId:{

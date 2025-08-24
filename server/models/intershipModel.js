@@ -23,6 +23,14 @@ const internshipSchema=new mongoose.Schema({
     isPublished:{
          type:Boolean,
          default:false
+    },
+    internshipType:{
+        type:String,
+        required:true
+    },
+    location:{
+        type:String,
+        required:true
     }
 
 },{timestamps:true});

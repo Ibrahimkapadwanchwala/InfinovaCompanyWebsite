@@ -14,8 +14,11 @@ const getCategories=async(req,res)=>{
 const addCategory=async(req,res)=>{
     try {
         const{name}=req.body;
+        if (!name || name.trim() === "") {
+  return res.status(400).json({ message: "Category name is required." });
+}
         const newCategory=await serviceCategoryModel.create({name});
-        return res.status(201).json({messsage:"Category added sucessfully!!",data:newCategory});
+        return res.status(201).json({message:"Category added sucessfully!!",data:newCategory});
 
     } catch (error) {
         return res.status(500).json({message:error.message});
@@ -32,7 +35,7 @@ const deleteCategory=async(req,res) =>{
             return res.status(404).json({message:"Category not found!"});
         }
         await serviceCategoryModel.findByIdAndDelete(id);
-        return res.status(201).json({message:"Category deleted sucessfully!!"});
+        return res.status(200).json({message:"Category deleted sucessfully!!"});
         
     } catch (error) {
         return res.status(500).json({message:error.message});
@@ -49,8 +52,11 @@ const updateCategory=async(req,res)=>{
             return res.status(404).json({message:"Category not found!"});
         }
         const{name}=req.body;
+        if(!name || name.trim()===""){
+            return res.status(400).json({message:"Categgory name is required!"});
+        }
         const updatedCategory=await serviceCategoryModel.findByIdAndUpdate(id,{name},{new:true});
-        return res.status(201).json({message:"Category updated sucessfully!",data:updatedCategory});
+        return res.status(200).json({message:"Category updated sucessfully!",data:updatedCategory});
     } catch (error) {
         return res.status(500).json({message:error.message});
     }

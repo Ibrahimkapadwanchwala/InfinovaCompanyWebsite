@@ -11,7 +11,8 @@ const addTestimonial = async (req, res) => {
 
     let videoUrl = "";
     let imageUrl = "";
-
+    let videoPublicId="";
+    let imagePublicId="";
     if (req.files?.videoUrl) {
       const videoFile = req.files.videoUrl;
       const ext = path.extname(videoFile.name).toLowerCase();
@@ -23,6 +24,7 @@ const addTestimonial = async (req, res) => {
         videoFile.tempFilePath,
         {
           resource_type: "video",
+          folder: "Testimonial-video",
         }
       );
       videoUrl = videoResult.secure_url;
@@ -41,7 +43,8 @@ const addTestimonial = async (req, res) => {
       }
 
       const imageResult = await cloudinary.uploader.upload(
-        imageFile.tempFilePath
+        imageFile.tempFilePath,
+        { folder: "Testimonial-image" }
       );
       imageUrl = imageResult.secure_url;
       imagePublicId = imageResult.public_id;
@@ -122,41 +125,56 @@ const updateTestimonial = async (req, res) => {
       if (imagePublicId) {
         await cloudinary.uploader.destroy(imagePublicId);
       }
-      const result = await cloudinary.uploader.upload(imageFile.tempFilePath);
+      const result = await cloudinary.uploader.upload(imageFile.tempFilePath, {
+        folder: "Testimonial-image",
+      });
       imageUrl = result.secure_url;
       imagePublicId = result.public_id;
     }
     if (req.files?.videoUrl) {
       const videoFile = req.files.videoUrl;
       const ext = path.extname(videoFile.name).toLowerCase();
-       if (!ALLOWED_VIDEO_TYPES.includes(ext)) {
+      if (!ALLOWED_VIDEO_TYPES.includes(ext)) {
         return res.status(400).json({ message: "Unsupported video format." });
       }
-       if (videoPublicId) {
+      if (videoPublicId) {
         await cloudinary.uploader.destroy(videoPublicId, {
-          resource_type: "video"
+          resource_type: "video",
         });
       }
-        const result = await cloudinary.uploader.upload(videoFile.tempFilePath, {
-        resource_type: "video"
+      const result = await cloudinary.uploader.upload(videoFile.tempFilePath, {
+        resource_type: "video",
+        folder: "Testimonial-video",
       });
       videoUrl = result.secure_url;
       videoPublicId = result.public_id;
-
     }
-    const updatedTestimonial=await testimonialModel.create(testimonialId,{
-         name,
+    const updatedTestimonial = await testimonialModel.findByIdAndUpdate(
+      testimonialId,
+      {
+        name,
         message,
         website,
         imageUrl,
         videoUrl,
         imagePublicId,
-        videoPublicId
-    },{new:true});
-    return res.status(200).json({message:"Testimonial updated sucessfully!",data:updatedTestimonial});
-
+        videoPublicId,
+      },
+      { new: true }
+    );
+    return res
+      .status(200)
+      .json({
+        message: "Testimonial updated sucessfully!",
+        data: updatedTestimonial,
+      });
   } catch (error) {
-    return res.status(500).json({message:error.message});
+    return res.status(500).json({ message: error.message });
   }
 };
-module.exports = { addTestimonial, getTestimonials, deleteTestimonials,updateTestimonial};
+module.exports = {
+  addTestimonial,
+  getTestimonials,
+  deleteTestimonials,
+  updateTestimonial,
+};

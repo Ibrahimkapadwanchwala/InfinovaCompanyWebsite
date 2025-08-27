@@ -18,6 +18,8 @@ const clientCourseRouter=require('./routes/client/eduventures/courseRouter');
 const clientTrainerRouter=require('./routes/client/eduventures/trainerRoutes');
 const clientInternshipRouter=require('./routes/client/eduventures/internshipRoutes');
 const clientJobRouter=require('./routes/client/eduventures/jobRoutes')
+const otpRouter=require('./routes/otpRoutes');
+const brochureDownloadRouter=require("./routes/brochureDownloadRoutes");
 const cors=require('cors')
 app.use(cors({
     origin: ["http://localhost:3000"],
@@ -27,6 +29,8 @@ app.use(cors({
 app.use(fileUpload({
     useTempFiles:true
 }));
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 app.use("/api/admin/internships",intershipRouter);
 app.use('/api/admin/jobs',jobRouter);
 app.use('/api/admin/course-category',courseCategoryRouter);
@@ -43,6 +47,8 @@ app.use('/api/user/courses',clientCourseRouter);
 app.use('/api/user/trainers',clientTrainerRouter);
 app.use('/api/user/internships',clientInternshipRouter);
 app.use('/api/user/jobs',clientJobRouter);
+app.use('/api/otp',otpRouter);
+app.use('/api/brochure_downloads',brochureDownloadRouter);
 app.get('/',(req,res)=>{
     res.send("API started!!");
 });

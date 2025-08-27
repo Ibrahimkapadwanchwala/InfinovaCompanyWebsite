@@ -19,6 +19,10 @@ const getCourses = async (req, res) => {
 };
 const addCourse = async (req, res) => {
   try {
+     const { name, details, duration, category, trainer } = req.body;
+     // taking the name to create a custom pdf by setting the public id as fileName also removing the whitespaces using regular expressions
+     const courseName=name;
+     const publicId=courseName.replace(/\s+/g,"_");
     const brochureFile = req.files.brochure;
     console.log(brochureFile);
     
@@ -31,9 +35,10 @@ const addCourse = async (req, res) => {
     const result = await cloudinary.uploader.upload(brochureFile.tempFilePath, {
       folder: "Course-brochures",
       resource_type: "auto",
-      format:'pdf'
+      format:'pdf',
+      public_id:publicId
     });
-    const { name, details, duration, category, trainer } = req.body;
+   
     const brochureUrl = result.secure_url;
     const brochurePublicId = result.public_id;
     console.log(brochureUrl);

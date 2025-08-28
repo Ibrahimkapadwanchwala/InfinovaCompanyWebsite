@@ -17,6 +17,14 @@ const newCoursesSchema=new mongoose.Schema({
         brochurePublicId:{
             type:String
         },
+        courseImageUrl:{
+            type:String,
+            required:true
+        },
+        courseImagePublicId:{
+            type:String,
+            required:true
+        },
         category:{
             type:mongoose.Schema.Types.ObjectId,
             ref:'CourseCategory',

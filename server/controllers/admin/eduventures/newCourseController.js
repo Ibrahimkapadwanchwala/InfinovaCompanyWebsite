@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const newCourseModel = require("../../../models/newCoursesModel");
 const cloudinary = require("../../../configs/cloudinary");
+const ALLOWED_IMAGE_EXTENSIONS = [".jpeg", ".jpg", ".png", ".webp"];
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const fs = require("fs");
 const path = require("path");
 const getCourses = async (req, res) => {
@@ -19,6 +21,24 @@ const getCourses = async (req, res) => {
 };
 const addCourse = async (req, res) => {
   try {
+     const imageFile = req.files.courseImage;
+        const extension = path.extname(imageFile.name).toLowerCase();
+        if (!ALLOWED_IMAGE_EXTENSIONS.includes(extension)) {
+          return res
+            .status(400)
+            .json({
+              message:
+                "Unsupported image format. Only .jpg, .jpeg, .png, .webp allowed.",
+            });
+        }
+        if (imageFile.size > MAX_IMAGE_SIZE) {
+          return res.status(400).json({ message: "Image size exceeds 5MB." });
+        }
+        const image = await cloudinary.uploader.upload(imageFile.tempFilePath,{
+          
+          folder:"course-images"});
+          courseImageUrl=image.secure_url;
+          courseImagePublicId=image.public_id;
      const { name, details, duration, category, trainer } = req.body;
      // taking the name to create a custom pdf by setting the public id as fileName also removing the whitespaces using regular expressions
      const courseName=name;
@@ -49,6 +69,8 @@ const addCourse = async (req, res) => {
       duration,
       brochureUrl,
       brochurePublicId,
+      courseImageUrl,
+      courseImagePublicId,
       category,
       trainer,
       isPublished: true,

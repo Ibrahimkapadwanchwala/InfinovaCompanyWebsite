@@ -3,7 +3,7 @@ const mongoose=require('mongoose');
 const addCategory=async(req,res)=>{
     try {
         const{name}=req.body;
-        console.log(name);
+       
         
         const newCategory=await hiringSolutionsCategoryModel.create({name});
         return res.status(201).json({message:"Hiring category added sucessfully",data:newCategory});

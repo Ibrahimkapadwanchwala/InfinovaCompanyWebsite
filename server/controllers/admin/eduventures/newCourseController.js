@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-const courseModel = require("../../../models/courseModel");
+const newCourseModel = require("../../../models/newCoursesModel");
 const cloudinary = require("../../../configs/cloudinary");
 const fs = require("fs");
 const path = require("path");
 const getCourses = async (req, res) => {
   try {
-    const populatedCourse = await courseModel
+    const populatedCourse = await newCourseModel
       .find()
       .populate("trainer")
       .populate("category");
@@ -24,7 +24,7 @@ const addCourse = async (req, res) => {
      const courseName=name;
      const publicId=courseName.replace(/\s+/g,"_");
     const brochureFile = req.files.brochure;
-   
+    
     
     const allowedExtensions = [".pdf", ".docx"];
     const ext = path.extname(brochureFile.name).toLowerCase();
@@ -41,9 +41,9 @@ const addCourse = async (req, res) => {
    
     const brochureUrl = result.secure_url;
     const brochurePublicId = result.public_id;
+ 
     
-    
-    const newCourse = await courseModel.create({
+    const newCourse = await newCourseModel.create({
       name,
       details,
       duration,
@@ -54,7 +54,7 @@ const addCourse = async (req, res) => {
       isPublished: true,
     });
 
-    const populatedCourse = await courseModel
+    const populatedCourse = await newCourseModel
       .findById(newCourse._id)
       .populate("trainer")
       .populate("category");
@@ -72,7 +72,7 @@ const deleteCourse = async (req, res) => {
       return res.status(400).json({ message: "Invalid ID format!" });
     }
     const courseId = req.params.id;
-    const course = await courseModel.findById(courseId);
+    const course = await newCourseModel.findById(courseId);
     if (!course) {
       return res.status(404).json({ message: "Course not found!" });
     }
@@ -82,7 +82,7 @@ const deleteCourse = async (req, res) => {
         resource_type: "raw",
       });
     }
-    const deletedCourse = await courseModel.findOneAndDelete({
+    const deletedCourse = await newCourseModel.findOneAndDelete({
       _id: req.params.id,
     });
 
@@ -97,7 +97,7 @@ const updateCourse = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(courseId)) {
       return res.status(400).json({ message: "Invalid ID format!" });
     }
-    const course = await courseModel.findById(courseId);
+    const course = await newCourseModel.findById(courseId);
     if (!course) {
       return res.status(404).json({ message: "Course not found!" });
     }
@@ -146,12 +146,12 @@ const updateCourse = async (req, res) => {
       });
     }
 
-    const updatedCourse = await courseModel.findOneAndUpdate(
+    const updatedCourse = await newCourseModel.findOneAndUpdate(
       { _id: req.params.id },
       updatedFields,
       { new: true }
     );
-    const populatedCourse = await courseModel
+    const populatedCourse = await newCourseModel
       .findById(updatedCourse._id)
       .populate("trainer")
       .populate("category");

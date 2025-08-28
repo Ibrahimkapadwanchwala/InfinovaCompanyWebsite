@@ -3,7 +3,7 @@ const mongoose=require('mongoose') ;
 const addCategory = async (req, res) => {
   try {
     const { name } = req.body;
-    console.log(name);
+    
     const exists = await courseCategoryModel.findOne({ name });
     if (exists) {
       return res
@@ -37,7 +37,7 @@ const updateCategory = async (req, res) => {
       req.body,
       { new: true }
     );
-    console.log(updatedCategory);
+   
     
     if(!updatedCategory){
         return res.status(404).json({message:"Category not found!"});

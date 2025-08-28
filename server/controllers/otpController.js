@@ -21,13 +21,13 @@ const getOtp=async(req,res)=>{
        const transporter=nodemailer.createTransport({
         service:'gmail',
         auth:{
-            user:"ikapadwanchwala@gmail.com",
-            pass:"kjulpyzbqqcplsie"
+            user:`${process.env.AUTH_USER}`,
+            pass:`${process.env.AUTH_PASS}`
         }
        });
      transporter.sendMail({
-        from:"ikapadwanchwala@gmail.com",
-        to:"kapadwanchwalai@gmail.com",
+        from:`${process.env.AUTH_USER}`,
+        to:`${email}`,
         subject:"Your Otp",
         text:`Hi ${name}, your OTP code is ${otp}. It will expire in 5 minutes.`
 
@@ -40,11 +40,11 @@ const getOtp=async(req,res)=>{
 const verifyOtp=async(req,res)=>{
     try {
         const{email,name,number,age,enteredOtp}=req.body;
-        console.log(email);
+       
         
-        console.log(enteredOtp)
+        
         const record=await otpModel.findOne({email});
-        console.log(record);
+      
         
         if(!record){
             return res.json({success:false,message:"Otp not found or expired!"})

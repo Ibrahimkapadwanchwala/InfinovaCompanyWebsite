@@ -25,7 +25,7 @@ const clientNewCourseRouter=require('./routes/client/eduventures/newCourseRouter
 const contactFormRouter=require('./routes/contactRoutes');
 const cors=require('cors')
 app.use(cors({
-    origin: ["http://localhost:3000"],
+    origin: ["https://project-frontend-1-0je1.onrender.com"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }))

@@ -9,7 +9,7 @@ const transporter=nodemailer.createTransport({
         pass:"kjulpyzbqqcplsie"
     }
 });
-cron.schedule("45 2 * * * ",async()=>{
+cron.schedule("0 1 * * * ",async()=>{
     try {
         await transporter.sendMail({
             from:"ikapadwanchwala@gmail.com",
